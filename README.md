@@ -1,4 +1,4 @@
-# Mathorix Truth Table Generator
+# Truth Table Generator by Mathorix
 
 A lightweight CLI tool for formal logic. It parses logical expressions and generates complete truth tables using a custom lexer, parser, and Abstract Syntax Tree (AST).
 
