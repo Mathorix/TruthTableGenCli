@@ -1,5 +1,5 @@
 from typing import Tuple
-from nodes import AST, BinaryOp, UnaryOp, Var # Updated import
+from nodes import AST, BinaryOp, UnaryOp, Var 
 from lexer import lex
 
 class Parser:
