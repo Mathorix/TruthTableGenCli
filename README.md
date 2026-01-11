@@ -1,71 +1,62 @@
-# Truth Table Generator by Mathorix
+# Logic Engine CLI
 
-A lightweight CLI tool for formal logic. It parses logical expressions and generates complete truth tables using a custom lexer, parser, and Abstract Syntax Tree (AST).
+A small Python command-line tool for working with propositional and basic first-order logic. It can generate truth tables for logical expressions and check the validity of arguments using truth-table semantics.
 
-## Features
+## Requirements
+- Python 3.8 or newer
+- No external dependencies
 
-* **Interactive CLI**: Input expressions directly into the prompt.
-* **Recursive Descent Parser**: Handles complex operator precedence and nested parentheses.
-* **Custom AST**: Evaluates logic through tree traversal.
-* **Full Operator Support**:
-* `~` (NOT)
-* `&` (AND)
-* `|` (OR)
-* `->` (IMPLIES)
-* `<->` (IFF)
-
-
-
-## Installation
-
-Ensure you have Python 3.7+ installed. Clone the repository and navigate to the directory:
-
-```bash
-git clone https://github.com/mathorix/TruthTableGen.git
-cd TruthTableGen
-
-```
-
-## Usage
-
-Run the tool using the following command:
-
-```bash
+## How to Run
+From the project directory:
 python cli.py
 
-```
+You will enter an interactive prompt. Type a logical expression or an argument and press Enter. Type `exit` or `quit` to leave.
 
-### Example
+## Input Modes
+Truth Table mode: enter a logical expression  
+Example: A & B
 
-```text
-Expression > A & (B | ~C) -> D
+Validity mode: enter an argument using a turnstile  
+Example: A & B |- A
 
-A     | B     | C     | D     | Result
---------------------------------------
-T     | T     | T     | T     | T    
-T     | T     | T     | F     | F    
-T     | T     | F     | T     | T    
-...
+## Supported Syntax
+Variables: identifiers starting with a letter (A, B, P, Q1, foo)
 
-```
+Operators:
+~    NOT  
+&    AND  
+|    OR  
+->   IMPLIES  
+<->  IFF  
 
-## Project Structure
+Parentheses are supported:
+(A & B) -> C
 
-* `nodes.py`: Defines the data structures for the expression tree (AST).
-* `lexer.py`: Tokenizes the raw input string using regular expressions.
-* `parser.py`: Converts tokens into an AST based on formal grammar rules.
-* `truth_table.py`: Generates variable combinations and evaluates the AST.
-* `cli.py`: The entry point for the interactive user interface.
+Quantifiers:
+forall x
+exists x
 
-## Logical Precedence
+Examples:
+forall x (P -> Q)
+exists x (P & Q)
 
-The parser evaluates expressions in the following order:
+## Output
+- Variables are automatically detected and listed as table columns
+- Truth values are displayed as T and F
+- For arguments, the table shows Premise and Conclusion
+- An argument is invalid if any row has Premise = T and Conclusion = F
+- If no such row exists, the argument is valid
 
-1. Parentheses `()`
-2. Negation `~`
-3. Conjunction `&`
-4. Disjunction `|`
-5. Implication `->`
-6. Equivalence `<->`
+## Notes
+- Free variables appear in the truth table
+- Quantifiers evaluate by assigning the bound variable both True and False
+- Syntax and lexer errors are printed without crashing the program
 
----
+## Example Session
+Logic > A & B  
+Logic > A & B |- B  
+Logic > ~(A | B) -> C  
+Logic > exit
+
+## License
+Provided as-is for educational and experimental use.

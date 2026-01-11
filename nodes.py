@@ -19,3 +19,13 @@ class BinaryOp(AST):
     op: str
     right: AST
 
+@dataclass
+class Quantifier(AST):
+    quant: str
+    var: str
+    expr: AST
+
+@dataclass
+class Argument(AST):
+    premise: AST
+    conclusion: AST

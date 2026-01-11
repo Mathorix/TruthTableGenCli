@@ -1,5 +1,5 @@
 from typing import Tuple
-from nodes import AST, BinaryOp, UnaryOp, Var 
+from nodes import AST, BinaryOp, UnaryOp, Var, Quantifier, Argument
 from lexer import lex
 
 class Parser:
@@ -22,6 +22,26 @@ class Parser:
         return self.tokens[self.pos][0]
 
     def parse(self) -> AST:
+        # Parse the left side (the premises)
+        left = self.iff()
+        
+        # Check if we have a turnstile
+        if self.peek() == 'TURNSTILE':
+            self.consume('TURNSTILE')
+            # Parse the right side (the conclusion)
+            right = self.iff()
+            return Argument(premise=left, conclusion=right)
+        
+        return left
+
+    # --- Precedence Levels (Lowest to Highest) ---
+
+    def quantifier(self) -> AST:
+        if self.peek() in ('FORALL', 'EXISTS'):
+            quant_type = self.consume()[1]
+            var_name = self.consume('VAR')[1]
+            body = self.quantifier() 
+            return Quantifier(quant=quant_type, var=var_name, expr=body)
         return self.iff()
 
     def iff(self) -> AST:
@@ -61,7 +81,12 @@ class Parser:
             return Var(token=self.consume()[1])
         elif token_type == 'LPAREN':
             self.consume('LPAREN')
-            node = self.iff()
+            # Reset to lowest precedence (quantifier) inside parens
+            node = self.quantifier() 
             self.consume('RPAREN')
             return node
+        elif token_type in ('FORALL', 'EXISTS'):
+            # Allow jumping back to quantifier level if needed (e.g. ~(forall x P))
+            return self.quantifier()
+            
         raise SyntaxError(f"Unexpected token: {token_type}")
