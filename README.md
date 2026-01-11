@@ -1,62 +1,62 @@
-# Logic Engine CLI
+# Logic Engine Documentation
 
-A small Python command-line tool for working with propositional and basic first-order logic. It can generate truth tables for logical expressions and check the validity of arguments using truth-table semantics.
+This tool generates truth tables and verifies logical arguments using a recursive descent parser and a truth-functional evaluator.
 
-## Requirements
-- Python 3.8 or newer
-- No external dependencies
+## Installation
 
-## How to Run
-From the project directory:
+Ensure all files (`cli.py`, `lexer.py`, `parser.py`, `nodes.py`, `truth_table.py`) are in the same directory. Run the program via:
+
+```bash
 python cli.py
 
-You will enter an interactive prompt. Type a logical expression or an argument and press Enter. Type `exit` or `quit` to leave.
+```
 
-## Input Modes
-Truth Table mode: enter a logical expression  
-Example: A & B
+## Supported Operators
 
-Validity mode: enter an argument using a turnstile  
-Example: A & B |- A
+| Logic Gate | Syntax |
+| --- | --- |
+| Negation (NOT) | `~` |
+| Conjunction (AND) | `&` |
+| Disjunction (OR) | ` |
+| Conditional (IF/THEN) | `->` |
+| Biconditional (IFF) | `<->` |
+| Universal Quantifier | `forall x` |
+| Existential Quantifier | `exists x` |
+| Argument Turnstile | ` |
 
-## Supported Syntax
-Variables: identifiers starting with a letter (A, B, P, Q1, foo)
+## Usage Examples
 
-Operators:
-~    NOT  
-&    AND  
-|    OR  
-->   IMPLIES  
-<->  IFF  
+### Truth Table Generation
 
-Parentheses are supported:
-(A & B) -> C
+Enter any logical expression to see its full truth table.
 
-Quantifiers:
-forall x
-exists x
+```text
+Logic > (A & B) -> C
 
-Examples:
-forall x (P -> Q)
-exists x (P & Q)
+```
 
-## Output
-- Variables are automatically detected and listed as table columns
-- Truth values are displayed as T and F
-- For arguments, the table shows Premise and Conclusion
-- An argument is invalid if any row has Premise = T and Conclusion = F
-- If no such row exists, the argument is valid
+### Validity Testing
 
-## Notes
-- Free variables appear in the truth table
-- Quantifiers evaluate by assigning the bound variable both True and False
-- Syntax and lexer errors are printed without crashing the program
+Use the turnstile `|-` to separate a premise from a conclusion. The engine identifies an argument as **INVALID** if there is any case where the premise is True but the conclusion is False.
 
-## Example Session
-Logic > A & B  
-Logic > A & B |- B  
-Logic > ~(A | B) -> C  
-Logic > exit
+```text
+Logic > P -> Q |- ~P
+>> STATUS: INVALID ARGUMENT (Found 1 counter-examples)
 
-## License
-Provided as-is for educational and experimental use.
+```
+
+## Logic Precedence
+
+1. Parentheses `()`
+2. Quantifiers `forall`, `exists`
+3. Negation `~`
+4. Conjunction `&`
+5. Disjunction `|`
+6. Implications `->`, `<->`
+
+## Technical Overview
+
+* **lexer.py**: Tokenizes strings using regex named groups.
+* **parser.py**: Converts tokens into an Abstract Syntax Tree (AST) using recursive descent.
+* **truth_table.py**: Iterates through  combinations of truth values to evaluate the AST.
+* **cli.py**: Provides the interactive loop and table formatting.
